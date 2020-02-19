@@ -14,6 +14,6 @@ Web | [Throne-Web](https://github.com/DiljotSG/Throne-Web) | [Web Tasks](https:/
 iOS | [Throne-iOS](https://github.com/NickJosephson/Throne-iOS) | [iOS Tasks](https://github.com/NickJosephson/Throne-iOS/projects/1)
 Android | [Throne-Android](https://github.com/NickJosephson/Throne-Android) | [Android Tasks](https://github.com/NickJosephson/Throne-Android/projects/1)
 
-## Screenshot
+## Screenshots
 
-![Screenshot](./images/main-window.png)
+![Screenshot](./Screenshots/main-window.png)
