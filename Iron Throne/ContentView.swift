@@ -37,7 +37,7 @@ struct ContentView: View {
                         self.output = "Fetching..."
 
                         var urlComponent = URLComponents()
-                        urlComponent.scheme = "https"
+                        urlComponent.scheme = self.scheme
                         urlComponent.host = self.host
                         urlComponent.path = self.path
                         urlComponent.query = self.query
