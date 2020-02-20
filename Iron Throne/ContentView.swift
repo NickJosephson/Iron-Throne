@@ -12,7 +12,9 @@ struct ContentView: View {
     @ObservedObject private var login = LoginManager.shared
     @State private var scheme = "https"
     @State private var host = "api-dev.findmythrone.com"
-    @State private var path = "/washrooms/"
+    @State private var path = "/washrooms"
+    @State private var port = ""
+
     @State private var query = ""
     @State private var output = ""
     private var loginController = LoginUIViewController()
@@ -23,6 +25,7 @@ struct ContentView: View {
                 HStack {
                     TextField("Scheme", text: $scheme).frame(maxWidth: 50)
                     TextField("Host", text: $host)
+                    TextField("Port", text: $port).frame(maxWidth: 50)
                 }
                 TextField("Path", text: $path)
                 TextField("Query", text: $query)
@@ -41,12 +44,19 @@ struct ContentView: View {
                         urlComponent.host = self.host
                         urlComponent.path = self.path
                         urlComponent.query = self.query
+                        if let portNumber = Int(self.port), self.port != "" {
+                            urlComponent.port = portNumber
+                        }
                         
                         if let url = urlComponent.url {
                             print(url)
                             fetch(url: url) { data in
                                 DispatchQueue.main.async {
-                                    self.output = String(data: data, encoding: .utf8)!
+                                    if let prettyJSON = data.prettyPrintedJSONString {
+                                        self.output = prettyJSON as String
+                                    } else {
+                                        self.output = String(data: data, encoding: .utf8)!
+                                    }
                                 }
                             }
                         } else {
@@ -59,13 +69,15 @@ struct ContentView: View {
             }
             LoginView(controller: loginController).frame(width: 0, height: 1)
             GroupBox(label: Text("Result")) {
-                VStack {
-                    HStack() {
-                        Text(self.output)
-                        .multilineTextAlignment(.leading)
+                ScrollView {
+                    VStack {
+                        HStack() {
+                            Text(self.output)
+                            .multilineTextAlignment(.leading)
+                            Spacer(minLength: 0)
+                        }
                         Spacer(minLength: 0)
                     }
-                    Spacer(minLength: 0)
                 }
             }
         }
@@ -78,5 +90,15 @@ struct ContentView: View {
 struct ContentView_Previews: PreviewProvider {
     static var previews: some View {
         ContentView()
+    }
+}
+
+extension Data {
+    
+    var prettyPrintedJSONString: NSString? { /// NSString gives us a nice sanitized debugDescription
+        guard let object = try? JSONSerialization.jsonObject(with: self, options: []),
+        let data = try? JSONSerialization.data(withJSONObject: object, options: [.prettyPrinted]),
+        let prettyPrintedString = NSString(data: data, encoding: String.Encoding.utf8.rawValue) else { return nil }
+        return prettyPrintedString
     }
 }
