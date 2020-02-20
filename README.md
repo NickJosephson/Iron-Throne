@@ -1,5 +1,3 @@
-![Swift](https://github.com/NickJosephson/Iron-Throne/workflows/Swift/badge.svg)
-
 # Iron Throne
 
 Iron Throne is a macOS application to test the REST API of Throne. It allows you to send custom authenticated requests to the Throne API.
