@@ -25,6 +25,16 @@ func fetch(url: URL, completionHandler: @escaping (Data) -> Void) {
     performRequest(with: request, completionHandler: completionHandler)
 }
 
+func performRequestWithAuthentication(with request: URLRequest, completionHandler: @escaping (Data) -> Void) {
+    var authRequest = request
+    
+    if LoginManager.shared.accessToken != "" {
+        authRequest.addValue("Bearer \(LoginManager.shared.accessToken)", forHTTPHeaderField: "Authorization")
+    }
+
+    performRequest(with: authRequest, completionHandler: completionHandler)
+}
+
 /// Perform a URLRequest with error handling.
 /// - Parameters:
 ///   - request: URLRequest to perform.
@@ -32,22 +42,22 @@ func fetch(url: URL, completionHandler: @escaping (Data) -> Void) {
 func performRequest(with request: URLRequest, completionHandler: @escaping (Data) -> Void) {
     let task = URLSession.shared.dataTask(with: request) { (data, response, error) in
         if let error = error {
-            print("Fetching error: \(error)")
-            completionHandler("Fetching error: \(error)".data(using: .utf8)!)
+            print("Error: \(error)")
+            completionHandler("Error: \(error)".data(using: .utf8)!)
             return
         }
 
         if let httpResponse = response as? HTTPURLResponse {
             if httpResponse.statusCode == 401 {
-                print("Fetching error: Unauthorized, you may need to login again.")
-                completionHandler("Fetching error: Unauthorized, you may need to login again.".data(using: .utf8)!)
+                print("Error: Unauthorized, you may need to login again.")
+                completionHandler("Error: Unauthorized, you may need to login again.".data(using: .utf8)!)
                 return 
             }
         }
 
         guard let httpResponse = response as? HTTPURLResponse, (200...299).contains(httpResponse.statusCode) else {
-            print("Fetching error: Unexpected status code: \(String(describing: response))")
-            completionHandler("Fetching error: Unexpected status code: \(String(describing: response))".data(using: .utf8)!)
+            print("Error: Unexpected status code: \(String(describing: response))")
+            completionHandler("Error: Unexpected status code: \(String(describing: response))".data(using: .utf8)!)
             return
         }
 

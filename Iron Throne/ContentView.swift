@@ -14,8 +14,8 @@ struct ContentView: View {
     @State private var host = "api-dev.findmythrone.com"
     @State private var path = "/washrooms"
     @State private var port = ""
-
     @State private var query = ""
+    @State private var requestBody = ""
     @State private var output = ""
     private var loginController = LoginUIViewController()
     
@@ -35,6 +35,7 @@ struct ContentView: View {
                         self.loginController.startLogin()
                     }, label: { Text("Login") })
                 }
+                TextField("Body", text: $requestBody)
                 HStack {
                     Button(action: {
                         self.output = "Fetching..."
@@ -63,10 +64,102 @@ struct ContentView: View {
                             self.output = "Request not send: Invalid URL"
                         }
                     }, label: { Text("GET") })
-                    Button(action: {}, label: { Text("POST") }).disabled(true)
-                    Button(action: {}, label: { Text("DELETE") }).disabled(true)
+                    Button(action: {
+                        self.output = "Sending..."
+
+                        var urlComponent = URLComponents()
+                        urlComponent.scheme = self.scheme
+                        urlComponent.host = self.host
+                        urlComponent.path = self.path
+                        urlComponent.query = self.query
+                        if let portNumber = Int(self.port), self.port != "" {
+                            urlComponent.port = portNumber
+                        }
+                        
+                        if let url = urlComponent.url {
+                            print(url)
+                            var request = URLRequest(url: url)
+                            request.httpBody = self.requestBody.data(using: .utf8)
+                            request.httpMethod = "POST"
+                            
+                            performRequestWithAuthentication(with: request) { data in
+                                DispatchQueue.main.async {
+                                    if let prettyJSON = data.prettyPrintedJSONString {
+                                        self.output = prettyJSON as String
+                                    } else {
+                                        self.output = String(data: data, encoding: .utf8)!
+                                    }
+                                }
+                            }
+                        } else {
+                            self.output = "Request not send: Invalid URL"
+                        }
+                    }, label: { Text("POST") })
+                    Button(action: {
+                        self.output = "Sending..."
+
+                        var urlComponent = URLComponents()
+                        urlComponent.scheme = self.scheme
+                        urlComponent.host = self.host
+                        urlComponent.path = self.path
+                        urlComponent.query = self.query
+                        if let portNumber = Int(self.port), self.port != "" {
+                            urlComponent.port = portNumber
+                        }
+                        
+                        if let url = urlComponent.url {
+                            print(url)
+                            var request = URLRequest(url: url)
+                            request.httpBody = self.requestBody.data(using: .utf8)
+                            request.httpMethod = "PUT"
+                            
+                            performRequestWithAuthentication(with: request) { data in
+                                DispatchQueue.main.async {
+                                    if let prettyJSON = data.prettyPrintedJSONString {
+                                        self.output = prettyJSON as String
+                                    } else {
+                                        self.output = String(data: data, encoding: .utf8)!
+                                    }
+                                }
+                            }
+                        } else {
+                            self.output = "Request not send: Invalid URL"
+                        }
+                    }, label: { Text("PUT") })
+                    Button(action: {
+                        self.output = "Sending..."
+
+                        var urlComponent = URLComponents()
+                        urlComponent.scheme = self.scheme
+                        urlComponent.host = self.host
+                        urlComponent.path = self.path
+                        urlComponent.query = self.query
+                        if let portNumber = Int(self.port), self.port != "" {
+                            urlComponent.port = portNumber
+                        }
+                        
+                        if let url = urlComponent.url {
+                            print(url)
+                            var request = URLRequest(url: url)
+                            request.httpBody = self.requestBody.data(using: .utf8)
+                            request.httpMethod = "DELETE"
+                            
+                            performRequestWithAuthentication(with: request) { data in
+                                DispatchQueue.main.async {
+                                    if let prettyJSON = data.prettyPrintedJSONString {
+                                        self.output = prettyJSON as String
+                                    } else {
+                                        self.output = String(data: data, encoding: .utf8)!
+                                    }
+                                }
+                            }
+                        } else {
+                            self.output = "Request not send: Invalid URL"
+                        }
+                    }, label: { Text("DELETE") })
                 }
             }
+
             LoginView(controller: loginController).frame(width: 0, height: 1)
             GroupBox(label: Text("Result")) {
                 ScrollView {
