@@ -81,7 +81,9 @@ struct ContentView: View {
                             var request = URLRequest(url: url)
                             request.httpBody = self.requestBody.data(using: .utf8)
                             request.httpMethod = "POST"
-                            request.addValue("application/json", forHTTPHeaderField: "Content-Type")
+                            request.setValue("application/json", forHTTPHeaderField: "Content-Type")
+                            
+                            print(self.requestBody)
                             
                             performRequestWithAuthentication(with: request) { data in
                                 DispatchQueue.main.async {
