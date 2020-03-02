@@ -81,6 +81,7 @@ struct ContentView: View {
                             var request = URLRequest(url: url)
                             request.httpBody = self.requestBody.data(using: .utf8)
                             request.httpMethod = "POST"
+                            request.addValue("application/json", forHTTPHeaderField: "Content-Type")
                             
                             performRequestWithAuthentication(with: request) { data in
                                 DispatchQueue.main.async {
@@ -112,7 +113,8 @@ struct ContentView: View {
                             var request = URLRequest(url: url)
                             request.httpBody = self.requestBody.data(using: .utf8)
                             request.httpMethod = "PUT"
-                            
+                            request.addValue("application/json", forHTTPHeaderField: "Content-Type")
+
                             performRequestWithAuthentication(with: request) { data in
                                 DispatchQueue.main.async {
                                     if let prettyJSON = data.prettyPrintedJSONString {
@@ -143,7 +145,8 @@ struct ContentView: View {
                             var request = URLRequest(url: url)
                             request.httpBody = self.requestBody.data(using: .utf8)
                             request.httpMethod = "DELETE"
-                            
+                            request.addValue("application/json", forHTTPHeaderField: "Content-Type")
+
                             performRequestWithAuthentication(with: request) { data in
                                 DispatchQueue.main.async {
                                     if let prettyJSON = data.prettyPrintedJSONString {
