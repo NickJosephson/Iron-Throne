@@ -14,4 +14,6 @@ Android | [Throne-Android](https://github.com/NickJosephson/Throne-Android) | [A
 
 ## Screenshots
 
-![Screenshot](./Screenshots/main-window.png)
+![Screenshot](./Screenshots/shot2.png)
+
+![Screenshot](./Screenshots/shot1.png)
