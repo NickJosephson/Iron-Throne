@@ -34,6 +34,15 @@ struct ContentView: View {
                     Button(action: { self.performRequest(method: "POST") }, label: { Text("POST") })
                     Button(action: { self.performRequest(method: "PUT") }, label: { Text("PUT") })
                     Button(action: { self.performRequest(method: "DELETE") }, label: { Text("DELETE") })
+                    Spacer()
+                    Button(
+                        action: {
+                            let pasteBoard = NSPasteboard.general
+                            pasteBoard.clearContents()
+                            pasteBoard.writeObjects([self.output as NSString])
+                        },
+                        label: { Text("Copy") }
+                    )
                 }
             }
 
